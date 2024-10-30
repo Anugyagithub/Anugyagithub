@@ -8,7 +8,7 @@ Run the script with:-
 bash
 Copy code
 python titanic_survival.py
-Output
+Output:
 •	Data Visualization: Generates plots to show survival distribution.
 •	Model Accuracy: Prints accuracy score and classification report.
 •	Confusion Matrix: Visualizes predictions vs. actual values.
