@@ -1,0 +1,83 @@
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load the dataset
+url = 'https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv'
+data = pd.read_csv(url)
+
+# Display the first few rows of the data
+print("Data preview:")
+print(data.head())
+
+# Check for missing values
+print("\nMissing values in each column:")
+print(data.isnull().sum())
+
+# Data Visualization
+plt.figure(figsize=(10, 5))
+
+# Survival distribution
+plt.subplot(1, 3, 1)
+sns.countplot(data['Survived'])
+plt.title('Survival Distribution')
+
+# Survival based on gender
+plt.subplot(1, 3, 2)
+sns.countplot(x='Survived', hue='Sex', data=data)
+plt.title('Survival Based on Gender')
+
+# Survival based on Passenger Class
+plt.subplot(1, 3, 3)
+sns.countplot(x='Survived', hue='Pclass', data=data)
+plt.title('Survival Based on Passenger Class')
+
+plt.tight_layout()
+plt.show()
+
+# Data Preprocessing
+# Fill missing values
+data['Age'].fillna(data['Age'].median(), inplace=True)
+data['Embarked'].fillna(data['Embarked'].mode()[0], inplace=True)
+
+# Drop unnecessary columns
+data.drop(['Cabin', 'Name', 'Ticket', 'PassengerId'], axis=1, inplace=True)
+
+# Convert categorical variables into dummy/indicator variables
+data = pd.get_dummies(data, drop_first=True)
+
+# Display the transformed data
+print("\nTransformed data preview:")
+print(data.head())
+
+# Splitting Data into Training and Test Sets
+X = data.drop('Survived', axis=1)
+y = data['Survived']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Model Training
+model = LogisticRegression(max_iter=200)
+model.fit(X_train, y_train)
+
+# Model Evaluation
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f'\nModel Accuracy: {accuracy * 100:.2f}%')
+
+# Detailed classification report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Confusion Matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(6, 4))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Did Not Survive', 'Survived'], yticklabels=['Did Not Survive', 'Survived'])
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.title('Confusion Matrix')
+plt.show()
