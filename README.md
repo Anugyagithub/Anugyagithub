@@ -4,7 +4,7 @@ This project uses the Titanic dataset to predict the survival of passengers base
 Files
 •	titanic_survival.py: Main script to load data, preprocess, train the model, and evaluate results.
 Setup and Usage
-Run the script with:
+Run the script with:-
 bash
 Copy code
 python titanic_survival.py
